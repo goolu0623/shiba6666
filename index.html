@@ -582,7 +582,8 @@ const Game = {
                 'thief': '🗡️ 盜賊', 
                 'cultist': '😈 惡魔信徒',
                 'scarecrow': '🌾 稻草人',
-                'ape': '🦍 人猿'
+                'ape': '🦍 人猿',
+                'egg': '🥚 上帝蛋'
             };
             document.getElementById('class-badge').innerText = badgeMap[Player.class] || "";
 
@@ -801,7 +802,8 @@ const Game = {
             'thief': '🗡️ 盜賊', 
             'cultist': '😈 惡魔信徒',
             'scarecrow': '🌾 稻草人',
-            'ape': '🦍 人猿'
+            'ape': '🦍 人猿',
+            'egg': '🥚 上帝蛋'
         };
         document.getElementById('class-badge').innerText = badgeMap[classType];
 
@@ -829,7 +831,7 @@ const Game = {
 
     getAtk() {
         let atk = Player.baseAtk;
-        if (classtype === 'egg') atk += 500;
+        if (player.classtype === 'egg') atk += 500;
         if (Player.equipment.weapon) atk += Player.equipment.weapon.val;
         return atk;
     },
