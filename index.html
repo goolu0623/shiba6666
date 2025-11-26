@@ -831,7 +831,7 @@ const Game = {
 
     getAtk() {
         let atk = Player.baseAtk;
-        if (Player.classType === 'egg') atk += 500;
+        if (Player.class === 'egg') atk += 500;
         if (Player.equipment.weapon) atk += Player.equipment.weapon.val;
         return atk;
     },
