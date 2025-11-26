@@ -130,6 +130,33 @@
         @keyframes screen-shake { 0% { transform: translate(0, 0); } 25% { transform: translate(-5px, 5px); } 50% { transform: translate(5px, -5px); } 75% { transform: translate(-5px, -5px); } 100% { transform: translate(0, 0); } }
         @keyframes float-up { 0% { transform: translateY(0) scale(1); opacity: 1; } 50% { transform: translateY(-30px) scale(1.2); opacity: 1; } 100% { transform: translateY(-60px) scale(1); opacity: 0; } }
 
+        /* Custom Confirm Modal Styling */
+        #custom-confirm-modal {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(0,0,0,0.85); 
+            z-index: 300; /* Higher than other modals */
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        
+            /* CUSTOM POSITIONING: Push the modal down */
+            justify-content: flex-start; 
+            padding-top: 15vh; /* Adjust this value (15vh) to set the vertical position */
+        }
+        #custom-confirm-box {
+            max-width: 350px;
+            width: 90%;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            background: var(--panel-color);
+            border: 2px solid var(--accent-color);
+        }
+        
         .anim-spawn { animation: spawn-pop 0.5s ease-out forwards; }
         .anim-damage { animation: damage-shake 0.4s ease-in-out; }
         .anim-lunge { animation: attack-lunge 0.3s ease-in-out; }
@@ -270,7 +297,7 @@
             <div class="class-desc">遭遇跌倒事件<br>必定抓住岩壁</div>
         </div>
         <div class="class-card" onclick="Game.selectClass('egg')">
-            <div class="class-title">🥚 上帝蛋_2</div>
+            <div class="class-title">🥚 上帝蛋_3</div>
             <div class="class-desc"><br>上帝淫威</div>
         </div>
     </div>
@@ -632,7 +659,7 @@ const Game = {
     },
 
     manualRestart() {
-        if (confirm("⚠ 確定要重新開始遊戲嗎？\n\n按下確定後，現有的進度將會被刪除且無法復原！")) {
+        if (customConfirm("⚠ 確定要重新開始遊戲嗎？\n\n按下確定後，現有的進度將會被刪除且無法復原！")) {
             localStorage.removeItem('fantasy_adventure_save');
             location.reload();
         }
@@ -830,6 +857,28 @@ const Game = {
         setTimeout(() => div.remove(), 1000);
     },
 
+    customConfirm(message) {
+        return new Promise(resolve => {
+            const modal = document.getElementById('custom-confirm-modal');
+            const textEl = document.getElementById('custom-confirm-text');
+            const okBtn = document.getElementById('btn-custom-ok');
+            const cancelBtn = document.getElementById('btn-custom-cancel');
+
+            textEl.innerText = message;
+            modal.classList.remove('hidden');
+
+            const handleResult = (result) => {
+                modal.classList.add('hidden');
+                okBtn.onclick = null;
+                cancelBtn.onclick = null;
+                resolve(result);
+            };
+
+            okBtn.onclick = () => handleResult(true);
+            cancelBtn.onclick = () => handleResult(false);
+        });
+    },
+    
     getAtk() {
         let atk = Player.baseAtk;
         if (Player.class === 'egg') atk += 500;
@@ -1326,7 +1375,7 @@ const Game = {
             price = Math.floor(price * 1.2);
         }
         
-        if(confirm(`確定要以 ${price} G 出售 ${item.name} 嗎？`)) {
+        if(customConfirm(`確定要以 ${price} G 出售 ${item.name} 嗎？`)) {
             Player.inventory[category].splice(index, 1);
             Player.gold += price;
             this.showFloatingText("+ " + price + " G", "yellow");
@@ -1821,9 +1870,9 @@ const Game = {
         }
         const item = Player.inventory[category][index];
         if (['weapon', 'armor', 'shield'].includes(item.type)) {
-            if(confirm(`要裝備 ${item.name} (${this.getItemDesc(item)}) 嗎？`)) this.equip(index, category);
+            if(customConfirm(`要裝備 ${item.name} (${this.getItemDesc(item)}) 嗎？`)) this.equip(index, category);
         } else if (item.type === 'consumable') {
-            if(confirm(`要使用 ${item.name} (${item.desc}) 嗎？`)) this.useItem(index, category);
+            if(customConfirm(`要使用 ${item.name} (${item.desc}) 嗎？`)) this.useItem(index, category);
         } else {
              alert(`${item.name}: ${item.desc || "素材/戰利品"}`);
         }
