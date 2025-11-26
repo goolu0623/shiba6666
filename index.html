@@ -269,6 +269,10 @@
             <div class="class-title">🦍 人猿</div>
             <div class="class-desc">遭遇跌倒事件<br>必定抓住岩壁</div>
         </div>
+        <div class="class-card" onclick="Game.selectClass('egg')">
+            <div class="class-title">🥚 上帝蛋</div>
+            <div class="class-desc"><br>上帝淫威</div>
+        </div>
     </div>
 </div>
 
@@ -825,6 +829,7 @@ const Game = {
 
     getAtk() {
         let atk = Player.baseAtk;
+        if (classtype === 'egg') atk += 500;
         if (Player.equipment.weapon) atk += Player.equipment.weapon.val;
         return atk;
     },
